@@ -1,0 +1,31 @@
+# general
+bin/
+build/
+tmp/
+log/
+.log
+
+# local rc
+.vimrc.*
+
+# vim
+*.sw[a-p]
+
+# ctags
+tags
+.tags
+# cscope
+cscope.files
+cscope.out
+cscope.in.out
+cscope.po.out
+
+# ruby
+.ruby-version
+.ruby-gemset
+.bundle
+
+# osx
+.DS_Store
+.Spotlight-V100
+.Trashes

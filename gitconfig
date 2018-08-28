@@ -1,0 +1,8 @@
+[alias]
+	br=branch
+	cm=commit
+	co=checkout
+	df=diff
+	tree=log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s"
+[push]
+	default = simple
