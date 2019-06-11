@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 RED='\033[1;31m'
 GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
@@ -58,6 +59,25 @@ info "dotdir: $dotdir"
 for cfg in ${home_cfg[@]}; do
 	exe ln -s -i $dotdir_r/$cfg ~/.$cfg
 done
+
+# external programs
+info "install external programs"
+check_cmd ruby
+ruby=$?
+
+## install ruby first
+if [ $ruby -ne 0 ]; then
+	read -p "$(echo -e ${YELLOW}install ruby? [y/n]${NC})" -r
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		. $dotdir/ext/install_ruby.sh
+		check_cmd ruby
+		ruby=$?
+	fi
+fi
+
+if [ $ruby -eq 0 ]; then
+	exe ruby $dotdir/ext/ext.rb -a
+fi
 
 # git config
 if check_to_do git "config git"; then
