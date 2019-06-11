@@ -1,0 +1,49 @@
+#example:
+#  cmd: command to check. use {name} if not present
+#  install: install method [script|apt|brew|pkgman,...]
+#  formula:
+#    apt: {name} {option}
+#    brew: {name} {option}
+#    script: |
+#      some scripts 1
+#      some scripts 2
+
+# https://github.com/postmodern/chruby
+chruby:
+  cmd: chruby-exec
+  formula:
+    script: |
+      wget -O chruby-0.3.9.tar.gz https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz
+      tar -xzvf chruby-0.3.9.tar.gz
+      cd chruby-0.3.9/
+      sudo make install
+# https://github.com/postmodern/ruby-install
+ruby-install:
+  formula:
+    script: |
+      wget -O ruby-install-0.7.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.7.0.tar.gz
+      tar -xzvf ruby-install-0.7.0.tar.gz
+      cd ruby-install-0.7.0/
+      sudo make install
+git:
+  install: pkgman
+# https://github.com/junegunn/fzf
+fzf:
+  install: [script,brew]
+  formula:
+    script: |
+      git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+      ~/.fzf/install
+# https://github.com/ggreer/the_silver_searcher
+ag:
+  install: pkgman
+  formula:
+    apt: silversearcher-ag
+    brew: the_silver_searcher
+ctags:
+  install: pkgman
+cscope:
+  install: pkgman
+cargo:
+  formula:
+    script: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
