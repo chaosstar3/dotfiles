@@ -31,23 +31,6 @@ Plug 'kien/rainbow_parentheses.vim'
 Plug 'airblade/vim-gitgutter'
 	let g:gitgutter_enabled = 0
 "Plug 'mhinz/vim-signify'
-Plug 'itchyny/lightline.vim'
-	function! LightLinePath()
-		return winwidth(0) > 70 ? expand('%:h') : '-/'.expand('%:h:t')
-	endfunction
-
-	let g:lightline = {
-		\'active': {
-		\  'left': [ [ 'mode', 'paste' ],
-		\            [ 'readonly', 'filename', 'modified', 'path' ] ]
-		\},
-		\'inactive': {
-		\  'left': [ [ 'readonly', 'filename', 'modified', 'path' ] ]
-		\},
-		\'component_function': {
-		\	'path': 'LightLinePath'
-		\}
-	\}
 
 " Syntax
 Plug 'slim-template/vim-slim'     " slim
@@ -121,14 +104,79 @@ nmap <silent> <C-p> :CtrlP<CR>
 set nu
 set list
 set listchars=tab:▸\ ,
+au BufWinEnter * match TrailWS /\s\+$/
+
+" Statusline
+function! SLStr(str)
+	if getwinvar(winnr(), 'WinActive', 0) == 0
+		return ''
+	endif
+
+	let mode = mode()
+	let map = {
+	\ 'N': ['n', 'no'],
+	\ 'I': ['i', 'ic', 'ix'],
+	\ 'V': ['v', 'V', "\<C-v>"],
+	\}
+
+	if a:str == '?'
+		for [k, v] in items(map)
+			for e in v
+				if e == mode
+					return ''
+				end
+			endfor
+		endfor
+		return mode.' '
+	endif
+
+	for m in get(map, a:str, 'other mode')
+		if m == mode
+			return ' '.a:str.' '
+		endif
+	endfor
+
+	return ''
+endfunction
+
+function! GetStr(str, default, ...)
+	if a:str == ''
+		return a:default
+	else
+		let prefix = get(a:, 1, '')
+		let postfix = get(a:, 2, '')
+		return prefix.a:str.postfix
+endfunction
+
+au WinLeave * call setwinvar(winnr(), 'WinActive', 0)
+au WinEnter,VimEnter * call setwinvar(winnr(), 'WinActive', 1)
+
+set laststatus=2 " always
+set statusline=
+set statusline+=%#SLColorNormal#%3{SLStr('N')}
+set statusline+=%#SLColorInsert#%3{SLStr('I')}
+set statusline+=%#SLColorVisual#%3{SLStr('V')}
+set statusline+=%#SLColorOther#%3{SLStr('?')}%*
+set statusline+=%#Red#%m%*%h%w
+set statusline+=\ %{GetStr(expand('%:t'),'[New]')}
+set statusline+=\ %<%{GetStr(expand('%:h'),'','\|\ ')}
+set statusline+=\ %=%#SLColorLineCol#\ %l:%c\ %*
 
 "" color
 set t_Co=256
 set bg=dark
-au WinEnter * :hi StatusLine ctermfg=blue ctermbg=white
-au BufWinEnter * match TrailWS /\s\+$/
+
+hi Red cterm=bold ctermfg=red ctermbg=none
+hi SLColorNormal cterm=bold ctermfg=28 ctermbg=148
+hi SLColorInsert cterm=bold ctermfg=18 ctermbg=75
+hi SLColorVisual cterm=bold ctermfg=130 ctermbg=208
+hi SLColorOther  cterm=bold ctermfg=15 ctermbg=0
+hi SLColorLineCol ctermfg=8 ctermbg=7
+hi StatusLine ctermfg=61 ctermbg=255
+hi StatusLineNC ctermfg=239 ctermbg=247
 
 hi Normal ctermbg=None
+hi VertSplit ctermfg=black ctermbg=white
 hi SpecialKey ctermfg=100
 hi search ctermbg=117
 hi TrailWS ctermbg=239
