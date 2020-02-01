@@ -1,11 +1,18 @@
+.lc
+
+# grep ignores
+.git
+.ignore
+
 # general
 bin/
 build/
 tmp/
 log/
-.log
+*.log
+*.bak
 
-# local rc
+# local vimrc
 .vimrc.*
 
 # vim
@@ -13,12 +20,16 @@ log/
 
 # ctags
 tags
+tags-e
 .tags
 # cscope
 cscope.files
 cscope.out
 cscope.in.out
 cscope.po.out
+
+# c
+*.o
 
 # ruby
 .ruby-version
