@@ -31,6 +31,23 @@ get_install_script() {
 		}'
 }
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	pkgman="brew"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+	pkgman="sudo apt"
+else
+	exit "Unknown OS $OSTYPE"
+fi
+
+for prereq in wget tar make; do
+	if (command -v "$prereq" >/dev/null); then
+		echo -e 1>&2 [${GREEN}+${NC}] $prereq: $(command -v "$prereq")
+	else
+		echo -e 1>&2 [${RED}-${NC}] $prereq
+		exe $pkgman install $prereq
+	fi
+done
+
 pushd .>/dev/null
 mkdir -p $install_path >/dev/null
 cd $install_path
