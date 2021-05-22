@@ -44,8 +44,8 @@ end
 def with_dir dir
 	pwd = Dir.pwd
 	unless Dir.exists? dir
-		info("mkdir #{dir}")
-		Dir.mkdir dir
+		info("mkdir -p #{dir}")
+		`mkdir -p #{dir}`
 	end
 	Dir.chdir(dir)
 	info("chdir #{dir}")
