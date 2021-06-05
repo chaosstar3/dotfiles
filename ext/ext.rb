@@ -30,15 +30,35 @@ def info msg
 	puts "[Info] ".blue + msg
 end
 
+EXECUTOR=<<SCRIPT
+RED='\033[1;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+# check backslash escape is enabled
+if [ "$(echo '\040')" = " " ]; then
+	ECHO="echo"
+else
+	ECHO="echo -e"
+fi
+
+while read cmdline; do
+	$ECHO "[${YELLOW}>${NC}] $cmdline"
+	if ! $cmdline; then
+		$ECHO "[${RED}X${NC}] $cmdline"
+		break
+	fi
+done <<CMD
+SCRIPT
+
 def exe cmd
-	puts "[>]".yellow + " #{cmd}"
-	puts `#{cmd}`
+	puts `#{EXECUTOR}#{cmd}\nCMD`
 	$?.success?
 end
 
-def check_cmd(cmd)
-	path = `which #{cmd}`
-	return $?.success?, path
+def check(checker)
+	result = `#{checker}`
+	return $?.success?, result
 end
 
 def with_dir dir
@@ -87,17 +107,17 @@ loop do
 			puts "[?] ".yellow + ext
 			false
 		else
-			cmd = info["cmd"]
-			cmd = ext if cmd.nil?
-			r, path = check_cmd(cmd)
-			if r
-				puts "[+] ".green + "#{ext}: #{path}"
+			checker = info["check"]
+			checker = "which #{ext}" if checker.nil?
+			ret, res = check(checker)
+			if ret
+				puts "[+] ".green + "#{ext}: #{res}"
 			else
 				if install.nil?
 					e[1] = true # to be installed
 				end
 			end
-			!r
+			!ret
 		end
 	end
 
@@ -132,7 +152,7 @@ loop do
 		next
 	end
 
-	exit if exts.select {|(ext, install)| install}.empty?
+	break if exts.select {|(ext, install)| install}.empty?
 
 	# INSTALL
 	with_dir File.join(Dir.home, ".bin/install") do
@@ -165,9 +185,10 @@ loop do
 				if formula.nil?
 					puts "formula not found".red
 				else
-					r = formula.split("\n").detect {|l| !exe l}
-					break if r.nil?
-					break
+					break unless exe formula
+					#r = formula.split("\n").detect {|l| !exe l}
+					#break if r.nil?
+					#break
 				end
 			end
 		end

@@ -16,11 +16,17 @@ exe() {
 	if [ -z $1 ]; then
 		while read cmdline;do
 			$ECHO "[${YELLOW}>${NC}] $cmdline"
-			$cmdline
+			if ! $cmdline; then
+				$ECHO "[${RED}X${NC}] $cmdline"
+				break
+			fi
 		done
 	else
 		$ECHO "[${YELLOW}>${NC}] $@"
-		$@
+		if ! $@; then
+			$ECHO "[${RED}X${NC}] $@"
+			break
+		fi
 	fi
 }
 
