@@ -5,31 +5,38 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 NC='\033[0m'
 
+# check backslash escape is enabled
+if [ "$(echo '\040')" = " " ]; then
+	ECHO="echo"
+else
+	ECHO="echo -e"
+fi
+
 # print and run command
 exe() {
 	if [ -z $1 ]; then
 		while read cmdline;do
-			echo -e "[${YELLOW}>${NC}] $cmdline"
+			$ECHO "[${YELLOW}>${NC}] $cmdline"
 			$cmdline
 		done
 	else
-		echo -e "[${YELLOW}>${NC}] $@"
+		$ECHO "[${YELLOW}>${NC}] $@"
 		$@
 	fi
 }
 
 # info(msg)
 info() {
-	echo -e 1>&2 "${BLUE}[info] $1${NC}"
+	$ECHO 1>&2 "${BLUE}[info] $1${NC}"
 }
 
 # check_cmd(cmd)
 check_cmd() {
 	if (command -v "$1" >/dev/null); then
-		echo -e 1>&2 [${GREEN}+${NC}] $1: $(command -v "$1")
+		$ECHO 1>&2 [${GREEN}+${NC}] $1: $(command -v "$1")
 		return 0
 	else
-		echo -e 1>&2 [${RED}-${NC}] $1
+		$ECHO 1>&2 [${RED}-${NC}] $1
 		return 1
 	fi
 }
@@ -67,7 +74,7 @@ ruby=$?
 
 ## install ruby first
 if [ $ruby -ne 0 ]; then
-	read -p "$(echo -e ${YELLOW}install ruby? [y/n]${NC})" -r
+	read -p "$($ECHO ${YELLOW}install ruby? [y/n]${NC})" -r
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
 		. $dotdir/ext/install_ruby.sh
 		check_cmd ruby

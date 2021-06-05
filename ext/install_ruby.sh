@@ -2,17 +2,24 @@
 install_path="$HOME/.bin/install"
 yaml=$(dirname $BASH_SOURCE)/ext.yml
 
+# check backslash escape is enabled
+if [ "$(echo '\040')" = " " ]; then
+	ECHO="echo"
+else
+	ECHO="echo -e"
+fi
+
 # print and run command
 exe() {
 	YELLOW='\033[1;33m'
 	NC='\033[0m'
 	if [ -z $1 ]; then
 		while read cmdline;do
-			echo -e "[${YELLOW}>${NC}] $cmdline"
+			$ECHO "[${YELLOW}>${NC}] $cmdline"
 			$cmdline
 		done
 	else
-		echo -e "[${YELLOW}>${NC}] $@"
+		$ECHO "[${YELLOW}>${NC}] $@"
 		$@
 	fi
 }
@@ -41,9 +48,9 @@ fi
 
 for prereq in wget tar make; do
 	if (command -v "$prereq" >/dev/null); then
-		echo -e 1>&2 [${GREEN}+${NC}] $prereq: $(command -v "$prereq")
+		$ECHO 1>&2 [${GREEN}+${NC}] $prereq: $(command -v "$prereq")
 	else
-		echo -e 1>&2 [${RED}-${NC}] $prereq
+		$ECHO 1>&2 [${RED}-${NC}] $prereq
 		exe $pkgman install $prereq
 	fi
 done
