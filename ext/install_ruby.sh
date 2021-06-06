@@ -31,10 +31,9 @@ exe() {
 }
 
 get_install_script() {
+	# simple yaml parsing
+	#   search root key and get script value
 	entry=$(sed "1,/^$1/d;/^[^ ]/,$$d" $yaml)
-
-	a=$(echo "$entry" | sed -n '/script:/,$p')
-
 	echo "$entry" | awk '
 		BEGIN{indent=100}
 		{
