@@ -22,6 +22,8 @@ Plug 'dhruvasagar/vim-zoom'
 	let g:zoom#statustext = 'zoom'
 
 Plug 'romainl/vim-cool' " hlsearch auto off
+Plug 'timakro/vim-yadi'
+au BufRead * DetectIndent
 
 " UI
 Plug 'nathanaelkane/vim-indent-guides'  " indent guide
