@@ -5,26 +5,8 @@ filetype plugin indent off
 
 if !empty(glob("~/.vim/autoload/plug.vim"))
 call plug#begin('~/.vim/plugged')
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install -all' }
-Plug 'junegunn/fzf.vim'
-	let g:fzf_layout = {'down': '~50%' }
-
+" Edit
 Plug 'vim-scripts/Smart-Tabs'
-
-Plug 'majutsushi/tagbar'
-	let g:tagbar_left = 0
-	let g:tagbar_vertical = 33
-	let g:tagbar_width = 80
-	let g:tagbar_compact = 1
-	let g:tagbar_indent = 0
-
-Plug 'dhruvasagar/vim-zoom'
-	let g:zoom#statustext = 'zoom'
-
-Plug 'romainl/vim-cool' " hlsearch auto off
-Plug 'timakro/vim-yadi'
-au BufRead * DetectIndent
-
 " UI
 Plug 'nathanaelkane/vim-indent-guides'  " indent guide
 	let g:indent_guides_start_level = 2
@@ -34,6 +16,9 @@ Plug 'kien/rainbow_parentheses.vim'
 Plug 'airblade/vim-gitgutter'
 	let g:gitgutter_enabled = 0
 "Plug 'mhinz/vim-signify'
+Plug 'romainl/vim-cool' " hlsearch auto off
+Plug 'timakro/vim-yadi'
+au BufRead * DetectIndent
 
 " Syntax
 Plug 'slim-template/vim-slim'     " slim
@@ -41,6 +26,19 @@ Plug 'kchmck/vim-coffee-script'   " coffee
 Plug 'cakebaker/scss-syntax.vim'  " scss
 Plug 'Keithbsmiley/tmux.vim'      " tmux.conf
 Plug 'rust-lang/rust.vim'         " rust
+
+" Util
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install -all' }
+Plug 'junegunn/fzf.vim'
+	let g:fzf_layout = {'down': '~50%' }
+Plug 'majutsushi/tagbar'
+	let g:tagbar_left = 0
+	let g:tagbar_vertical = 33
+	let g:tagbar_width = 80
+	let g:tagbar_compact = 1
+	let g:tagbar_indent = 0
+Plug 'dhruvasagar/vim-zoom'
+	let g:zoom#statustext = 'zoom'
 
 call plug#end()
 "else
