@@ -5,7 +5,7 @@
 detect_env
 
 # rc files at home
-home_cfg=(tmux.conf vimrc)
+home_cfg=(wezterm.lua tmux.conf vimrc)
 
 pushd . >/dev/null
 cd $(dirname "$0")
