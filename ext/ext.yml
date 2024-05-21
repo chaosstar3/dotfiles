@@ -8,6 +8,15 @@
 #      some scripts 1
 #      some scripts 2
 
+# pre-requisite
+wget:
+  install: pkgman
+curl:
+  install: pkgman
+make:
+  install: pkgman
+git:
+  install: pkgman
 # https://github.com/postmodern/chruby
 chruby:
   check: which chruby-exec
@@ -17,16 +26,24 @@ chruby:
       tar -xzvf chruby-0.3.9.tar.gz
       cd chruby-0.3.9/
       sudo make install
+  default: y
 # https://github.com/postmodern/ruby-install
 ruby-install:
   formula:
     script: |
-      wget -O ruby-install-0.7.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.7.0.tar.gz
-      tar -xzvf ruby-install-0.7.0.tar.gz
-      cd ruby-install-0.7.0/
+      wget https://github.com/postmodern/ruby-install/releases/download/v0.9.3/ruby-install-0.9.3.tar.gz
+      tar -xzvf ruby-install-0.9.3.tar.gz
+      cd ruby-install-0.9.3/
       sudo make install
-git:
-  install: pkgman
+  default: y
+# https://github.com/junegunn/vim-plug
+vimplug:
+  check: \[ -f ~/.vim/autoload/plug.vim \]
+  formula:
+    script: |
+      curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  default: y
 # https://github.com/junegunn/fzf
 fzf:
   install: script
@@ -34,12 +51,19 @@ fzf:
     script: |
       git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
       ~/.fzf/install
+  default: y
 # https://github.com/ggreer/the_silver_searcher
 ag:
   install: pkgman
   formula:
     apt: silversearcher-ag
     brew: the_silver_searcher
+  default: y
+# https://github.com/sharkdp/bat
+bat:
+  check: which batcat
+  install: pkgman
+  default: y
 ctags:
   install: pkgman
 cscope:
