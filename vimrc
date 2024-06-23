@@ -26,6 +26,7 @@ Plug 'kchmck/vim-coffee-script'   " coffee
 Plug 'cakebaker/scss-syntax.vim'  " scss
 Plug 'Keithbsmiley/tmux.vim'      " tmux.conf
 Plug 'rust-lang/rust.vim'         " rust
+Plug 'evanleck/vim-svelte'        " svelte
 
 " Util
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install -all' }

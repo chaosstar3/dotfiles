@@ -1,15 +1,17 @@
--- copy to ~/.hammerspoon/init.lua
 -- snap app
-apps = {d$term="wezterm", term_alt='terminal', dir="finder", web="firefox", editor="code"}
-applist = {apps['term'], apps["dir"], apps["web"], apps["editor"], "fork"}
-appAlt = {[1]=apps['term_alt']}
-
+apps = {sh="wezterm", sh_alt="terminal", dir="finder", web="Firefox", web2="whale", editor_alt="IntelliJ IDEA", editor="Visual Studio Code", git="fork", ppt="Microsoft PowerPoint"}
+applist = {apps["sh"], apps["dir"], apps["web"], apps["editor"], apps["git"], apps["code"]}
+applistAlt = {[1]=apps['sh_alt'], [3]=apps["web2"], [4]=apps["editor_alt"]}
 for i, app in pairs(applist) do
 	hs.hotkey.bind("option", tostring(i), function() hs.application.launchOrFocus(app) end)
 end
+for i, app in pairs(applistAlt) do
+	hs.hotkey.bind({"option","shift"}, tostring(i), function() hs.application.launchOrFocus(app) end)
+end
+
 
 -- snap window
-ratio_conf = {50, 33, 90, 66}
+ratio_conf = {50, 66, 90, 33}
 
 M = {MOVE=1, RESIZE=2}
 D = {UP=1, DOWN=2, LEFT=3, RIGHT=4, CENTER=5}
@@ -103,40 +105,32 @@ function win_move_monitor(direction)
 	end
 end
 
-function test()
-	print("test")
-	local menubar = hs.menubar.new()
-	local stext = hs.styledtext.new("test")
+macro = {
+	sc="hardstatus alwayslastline \"%{bW}%-w%{rW}%n*%t%{-}%+w %= %c %H\"",
+	utf8="export LC_ALL=\"ko_KR.utf8\" && export LANG=\"ko_KR.utf8\"",
+	euckr="export LC_ALL=\"ko_KR.euckr\" && export LANG=\"ko_KR.euckr\""
+}
 
-	local toggle = true
-	local timer = hs.timer.doEvery(1, function()
-		if(toggle) then
-			stext = stext:setStyle({color=hs.drawing.color.red})
-		else
-			stext = stext:removeStyle({"color"})
-		end
-		toggle = not toggle
-		menubar:setTitle(stext)
-	end)
 
-	menubar:setClickCallback(function()
-		timer:stop()
-		menubar:delete()
-	end)
+function dialog()
+	button, text = hs.dialog.textPrompt("test", "test2")
+
+	if macro[text] then
+		hs.pasteboard.setContents(macro[text])
+	end
+
 end
 
-
-hs.hotkey.bind("ctrl", "t", test)
 hs.hotkey.bind("option", "left", function() win_move(M.MOVE, D.LEFT) end)
 hs.hotkey.bind("option", "right", function() win_move(M.MOVE, D.RIGHT) end)
 hs.hotkey.bind("option", "up", function() win_move(M.MOVE, D.UP) end)
 hs.hotkey.bind("option", "down", function() win_move(M.MOVE, D.DOWN) end)
-hs.hotkey.bind({"cmd", "option"}, "left", function() win_move(M.RESIZE, D.LEFT) end)
-hs.hotkey.bind({"cmd", "option"}, "right", function() win_move(M.RESIZE, D.RIGHT) end)
-hs.hotkey.bind({"cmd", "option"}, "up", function() win_move(M.RESIZE, D.UP) end)
-hs.hotkey.bind({"cmd", "option"}, "down", function() win_move(M.RESIZE, D.DOWN) end)
+hs.hotkey.bind({"option", "cmd"}, "left", function() win_move(M.RESIZE, D.LEFT) end)
+hs.hotkey.bind({"option", "cmd"}, "right", function() win_move(M.RESIZE, D.RIGHT) end)
+hs.hotkey.bind({"option", "cmd"}, "up", function() win_move(M.RESIZE, D.UP) end)
+hs.hotkey.bind({"option", "cmd"}, "down", function() win_move(M.RESIZE, D.DOWN) end)
 hs.hotkey.bind({"option", "shift"}, "left", function() win_move_monitor(-1) end)
 hs.hotkey.bind({"option", "shift"}, "right", function() win_move_monitor(1) end)
 hs.hotkey.bind({"option", "shift"}, "up", win_maximize)
 hs.hotkey.bind({"option", "shift"}, "down", function() win_move(M.MOVE, D.CENTER) end)
-
+--hs.hotkey.bind({"option", "shift"}, "space", dialog)

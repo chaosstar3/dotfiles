@@ -1,5 +1,8 @@
 .lc
 
+# vscode
+*.code-workspace
+
 # grep ignores
 .git
 .ignore
