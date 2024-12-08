@@ -12,6 +12,15 @@ detect_env() {
 		ECHO="echo -e"
 	fi
 }
+detect_env
+
+detect_read() {
+	if [ -n "$ZSH_VERSION" ]; then
+		READ=(read -r -A)
+	else
+		READ="read -r -a"
+	fi
+}
 
 # print and run command
 exe() {
@@ -48,3 +57,58 @@ check_cmd() {
 		return 1
 	fi
 }
+
+# argument match
+# - usage:
+#   function my_cmd() {
+#     cmd() { test $? -eq 0 && exe command param ${@:3} || exe command $@; }
+#     argm 2 cmd $@ < lst
+#     argm 3 cmd $@ <<-EOM
+#     EOM
+#   }
+argm() {
+	n=$1
+	func=$2
+	detect_read
+	$READ args <<-ARGS
+		${@:3}
+	ARGS
+
+	test "$ZSH_VERSION" && z=1 || z=0
+	if [ -n "$args" ]; then
+		match=0
+		while $READ line; do
+			if [ "${line[z]::1}" = "#" ]; then
+				continue
+			fi
+
+			match=1
+			for i in $(seq $n); do
+				if [ "${line[z+i-1]}" != "${args[z+i-1]}" ]; then
+					match=0
+					break
+				fi
+			done
+			if [ $match -eq 1 ]; then
+				true
+				$func ${line[@]}
+				break
+			fi
+		done
+		if [ $match -eq 0 ]; then
+			false
+			$func ${args[@]}
+		fi
+	else
+		while $READ line; do
+			if [ "${line[z]::1}" = "#" ]; then
+				$ECHO $BLUE$line$NC
+			else
+				key=${line[@]::$n}
+				desc=${line[@]:$n}
+				$ECHO "$GREEN$key\t$YELLOW$desc$NC"
+			fi
+		done
+	fi
+}
+
