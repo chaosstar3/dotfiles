@@ -14,3 +14,10 @@ function jdk() {
 	argm 1 cmd $@ < $lst
 }
 
+function venv() {
+	local dir=${1:-.venv}
+	if [ ! -d "$dir" ]; then
+		exe python3 -m venv "$dir"
+	fi
+	exe source "$dir/bin/activate"
+}
