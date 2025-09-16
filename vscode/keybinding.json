@@ -1,0 +1,156 @@
+[
+	// editor: ctrl+e
+	{
+		"key": "ctrl+e",
+		"command": "-workbench.action.quickOpen",
+		"when": "isWindows",
+	},
+	{
+		"key": "ctrl+e",
+		"command": "-cursorLineEnd",
+		"when": "isMac",
+	},
+	{
+		"key": "ctrl+e a",
+		"command": "cursorLineStart",
+		"when": "textInputFocus"
+	},
+	{
+		"key": "ctrl+e e",
+		"command": "cursorLineEnd",
+		"when": "textInputFocus"
+	},
+	{
+		"key": "ctrl+e ctrl+e",
+		"command": "cursorLineEnd",
+		"when": "textInputFocus"
+	},
+	{
+		"key": "ctrl+e e",
+		"command": "workbench.action.terminal.sendSequence",
+		"args": {"text": "\u0005"},
+		"when": "textInputFocus"
+	},
+	{
+		"key": "ctrl+e ctrl+e",
+		"command": "workbench.action.terminal.sendSequence",
+		"args": {"text": "\u0005"},
+		"when": "textInputFocus"
+	},
+	// editor: pane
+	{
+		"key": "ctrl+e shift+\\",
+		"command": "workbench.action.splitEditor"
+	},
+	{
+		"key": "ctrl+e shift+'",
+		"command": "workbench.action.splitEditorOrthogonal"
+	},
+	{
+		"key": "ctrl+e up",
+		"command": "workbench.action.focusAboveGroup",
+		"when": "editorFocus"
+	},
+	{
+		"key": "ctrl+e down",
+		"command": "workbench.action.focusBelowGroup",
+		"when": "editorFocus"
+	},
+	{
+		"key": "ctrl+e left",
+		"command": "workbench.action.focusLeftGroup",
+		"when": "editorFocus"
+	},
+	{
+		"key": "ctrl+e right",
+		"command": "workbench.action.focusRightGroup",
+		"when": "editorFocus"
+	},
+	// editor: zoom
+	{
+		"key": "ctrl+e z",
+		"command": "workbench.action.toggleEditorWidths"
+	},
+	{
+		"key": "ctrl+=",
+		"command": "-workbench.action.zoomIn"
+	},
+	{
+		"key": "ctrl+shift+=",
+		"command": "workbench.action.zoomIn"
+	},
+	{
+		"key": "ctrl+=",
+		"command": "workbench.action.zoomReset"
+	},
+	// editor: text
+	{
+		"key": "ctrl+e space",
+		"command": "editor.action.indentationToSpaces"
+	},
+	{
+		"key": "ctrl+e tab",
+		"command": "editor.action.indentationToTabs"
+	},
+	{
+		"key": "ctrl+e shift+.", // >
+		"command": "editor.action.reindentselectedlines",
+		"when": "editorHasSelection"
+	},
+
+	// navigate
+	{
+		"key": "ctrl+e r",
+		"command": "workbench.files.action.showActiveFileInExplorer"
+	},
+	{
+		"key": "cmd+[",
+		"command": "workbench.action.navigateBack",
+		"when": "canNavigateBack"
+	},
+	{
+		"key": "ctrl+]",
+		"command": "-editor.action.indentLines",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "cmd+]",
+		"command": "editor.action.revealDefinition",
+		"when": "editorHasDefinitionProvider && editorTextFocus"
+	},
+
+	// test run: ctrl+r
+	{
+		"key": "ctrl+r",
+		"command": "-workbench.action.openRecent"
+	},
+	{
+		"key": "ctrl+o",
+		"command": "workbench.action.openRecent"
+	},
+	{
+		"key": "ctrl+r",
+		"command": "workbench.action.openRecent",
+		"when": "!testing.activeEditorHasTests"
+	},
+	{
+		"key": "ctrl+r",
+		"command": "testing.runAtCursor",
+		"when": "testing.activeEditorHasTests && editorTextFocus"
+	},
+	{
+		"key": "ctrl+shift+r",
+		"command": "-editor.action.refactor",
+		"when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
+	},
+	{
+		"key": "ctrl+shift+r",
+		"command": "testing.runCurrentFile",
+		"when": "testing.activeEditorHasTests"
+	},
+	{
+		"key": "ctrl+alt+r",
+		"command": "testing.debugAtCursor",
+		"when": "testing.activeEditorHasTests"
+	}
+]

@@ -1,0 +1,41 @@
+{
+	// UI
+	"window.title": "${rootName}${separator}${profileName}${separator}${folderPath}",
+	"workbench.activityBar.location": "top",
+	"workbench.editor.enablePreview": false,
+	"workbench.startupEditor":"none",
+	"editor.minimap.enabled": false,
+	"editor.renderWhitespace": "all",
+	"editor.wordWrap": "on",
+	"explorer.autoReveal": false,
+
+	// file
+	"search.useGlobalIgnoreFiles": true,
+	"files.watcherExclude": {
+		"**/.bloop": true,
+		"**/.metals": true,
+		"**/.ammonite": true
+	},
+	"files.exclude": {
+		"**/node_modules": true
+	},
+
+	"files.associations": {
+		"*.json5": "json",
+		"*.toml": "ini"
+	},
+
+	"files.trimTrailingWhitespace": true,
+	"[plaintext]": {
+		"files.trimTrailingWhitespace": false
+	},
+	"[tsv]": {
+		"files.trimTrailingWhitespace": false
+	},
+	"[csv]": {
+		"files.trimTrailingWhitespace": false
+	},
+	"[scala]": {
+		"editor.indentSize": 2
+	}
+}
