@@ -19,3 +19,9 @@ function venv() {
 	fi
 	exe source "$dir/bin/activate"
 }
+
+function dotenv() {
+	local env=${1:-.env}
+	exe "export $(cat $env | xargs)"
+}
+
