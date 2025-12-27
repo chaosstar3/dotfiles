@@ -154,7 +154,6 @@ function window.regist()
 	hs.hotkey.bind("option", "tab", window.rotate_focus)
 end
 
-window.regist() -- regist default
 return {
 	task=task,
 	window=window,
