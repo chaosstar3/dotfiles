@@ -4,6 +4,8 @@ local config = wezterm.config_builder()
 
 config.window_close_confirmation = 'AlwaysPrompt'
 -- UI
+config.color_scheme = 'Snazzy'
+config.colors = { background = '#000000' }
 config.enable_scroll_bar = true
 config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = true

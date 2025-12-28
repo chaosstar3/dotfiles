@@ -118,6 +118,26 @@ function window.move_monitor(direction)
 	end
 end
 
+function window.rotate_focus()
+	-- get all windows of current app
+	local app = hs.application.frontmostApplication()
+	local windows = app:allWindows()
+	table.sort(windows, function(a, b) return a:id() < b:id() end)
+
+	local current = hs.window.focusedWindow()
+	local current_index = nil
+	for i, win in ipairs(windows) do
+		if win:id() == current:id() then
+			current_index = i
+			break
+		end
+	end
+
+	-- focus next window
+	current_index = (current_index % #windows) + 1
+	windows[current_index]:focus()
+end
+
 function window.regist()
 	hs.hotkey.bind("option", "left", function() window.move(M.MOVE, D.LEFT) end)
 	hs.hotkey.bind("option", "right", function() window.move(M.MOVE, D.RIGHT) end)
@@ -131,9 +151,9 @@ function window.regist()
 	hs.hotkey.bind({"option", "shift"}, "right", function() window.move_monitor(1) end)
 	hs.hotkey.bind({"option", "shift"}, "up", window.maximize)
 	hs.hotkey.bind({"option", "shift"}, "down", function() window.move(M.MOVE, D.CENTER) end)
+	hs.hotkey.bind("option", "tab", window.rotate_focus)
 end
 
-window.regist() -- regist default
 return {
 	task=task,
 	window=window,

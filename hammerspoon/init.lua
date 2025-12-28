@@ -1,9 +1,11 @@
 -- copy to ~/.hammerspoon/init.lua
+package.path = package.path .. ";/path/to/dotfiles/hammerspoon/?.lua;"#
 snap = require("snap")
 task = snap.task
 
 -- example
-task.apps = {
+snap.window.regist()
+apps = {
 	dir="finder", term="wezterm",
 	web="firefox", editor="visual studio code", kb="obsidian", git="fork",
 	hello=task.task("/bin/echo", {os.getenv("HOME") .. "HELLO"})
