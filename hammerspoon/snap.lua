@@ -8,7 +8,7 @@ function task.task(path, arg)
 end
 function task.regist(modifier, table)
 	for i, id in pairs(table) do
-		local app = apps[id]
+		local app = task.apps[id]
 		if app then
 			if type(app) == "string" then
 				--app
