@@ -94,3 +94,21 @@ function lazy_comp() {
 		complete -F  _comp_$app $app
 	fi
 }
+
+# worktree
+function gwt() {
+	BRANCH=$1
+
+	if [ -z "$BRANCH" ]; then
+		return 1
+	fi
+
+	WORKTREE_DIR=$HOME/.worktree
+	GIT_ROOT=$(git rev-parse --show-toplevel)
+	if [ $? -ne 0 ]; then
+		return 2
+	fi
+
+	PROJ=$(basename $GIT_ROOT)
+	exe git worktree add  -b $BRANCH $WORKTREE_DIR/$PROJ-${BRANCH//\//-}
+}

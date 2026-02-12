@@ -46,12 +46,12 @@ vimplug:
   default: y
 # https://github.com/junegunn/fzf
 fzf:
+  chekc: which fzf
   install: script
   formula:
     script: |
       git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
       ~/.fzf/install
-  default: y
 # https://github.com/ggreer/the_silver_searcher
 ag:
   install: pkgman
@@ -61,7 +61,7 @@ ag:
   default: y
 # https://github.com/sharkdp/bat
 bat:
-  check: which batcat
+  check: [[ "$(uname)" == "linux-gnu" ]] && which batcat || which bat
   install: pkgman
   default: y
 ctags:
@@ -75,5 +75,5 @@ starship:
   check: which starship
   install: script
   formula:
-    script: curl -sS https://starship.rs/install.sh | sh
+    script: curl -sS https://starship.rs/install.sh | BIN_DIR=$HOME/.bin sh
   default: y
