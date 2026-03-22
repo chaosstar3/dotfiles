@@ -3,6 +3,8 @@ __pycache__
 
 # vscode
 *.code-workspace
+.bloop
+.metals
 
 # grep ignores
 .git
