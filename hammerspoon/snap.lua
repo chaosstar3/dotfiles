@@ -8,7 +8,7 @@ function task.task(path, arg)
 end
 function task.regist(modifier, table)
 	for i, id in pairs(table) do
-		local app = apps[id]
+		local app = task.apps[id]
 		if app then
 			if type(app) == "string" then
 				--app
@@ -172,7 +172,6 @@ function window.regist()
 	hs.hotkey.bind({"option", "shift"}, "tab", window.raise_all)
 end
 
-window.regist() -- regist default
 return {
 	task=task,
 	window=window,
