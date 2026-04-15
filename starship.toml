@@ -7,6 +7,9 @@ right_format = "$all$time"
 
 continuation_prompt = "[\\\\](bright-black) "
 
+[directory]
+fish_style_pwd_dir_length = 3
+
 [time]
 disabled = false
 format = '[$time]($style) '
@@ -23,5 +26,3 @@ vimcmd_replace_one_symbol = "[<](bold purple)"
 [package]
 disabled = true
 
-[ruby]
-symbol = "rb "
