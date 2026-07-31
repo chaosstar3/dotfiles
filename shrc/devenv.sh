@@ -95,3 +95,14 @@ function lazy_comp() {
 		complete -F _comp_$app $app
 	fi
 }
+
+function lazy_path() {
+	runtime_dirs=()
+	for executable in "$@"; do
+		"$executable" --version >/dev/null 2>&1
+		runtime_dir="$(dirname "$(which "$executable" 2>/dev/null)")"
+		runtime_dirs+=("${runtime_dir//$HOME/\$HOME}")
+	done
+	IFS=:
+	echo "${runtime_dirs[*]}"
+}
