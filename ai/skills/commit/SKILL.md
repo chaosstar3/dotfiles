@@ -11,14 +11,36 @@ Attribute commits without replacing human responsibility: keep the configured Gi
 
 1. Inspect the worktree, current branch, staged scope, recent commits, upstream, and configured identity.
 2. Preserve `git config user.name` and `git config user.email` as committer. Do not set `GIT_COMMITTER_NAME`, `GIT_COMMITTER_EMAIL`, or `--reset-author`.
-3. Identify the harness that runs the agent. Use the lowercase platform name as `{harness}`; for example, use `codex` when the agent runs in Codex. If the harness is unavailable, ask the user instead of inventing it.
+3. Identify the harness that runs the agent. Use the lowercase platform name as `{harness}`; for example, use `codex` when the agent runs in Codex, or `claude-code` when it runs in Claude Code. If the harness is unavailable, ask the user instead of inventing it.
 4. Identify the agent that integrated and owns the final change. Use it as the single author:
 
    ```text
-   {model}-{reasoning_effort}@{harness} <{harness}@ai.invalid>
+   {model}-{reasoning_effort}@{harness} <{harness}@agent.invalid>
    ```
 
-   Use the real model identifier and reasoning effort available in the current environment, normalized to lowercase and joined with hyphens—for example, `gpt-5.6-sol-high@codex` when running in Codex. Never omit the reasoning effort when it is available. If the model identifier already includes the effort suffix, do not append it again. If either value is unavailable, ask the user instead of inventing it.
+   Use the real model identifier and reasoning effort available in the current environment, normalized to lowercase and joined with hyphens—for example, `gpt-5.6-sol-high@codex` when running in Codex. Never omit the reasoning effort when it is available. If the model identifier already includes the effort suffix, do not append it again.
+
+   When the harness is Codex, resolve both values from the current session record in `~/.codex/state_5.sqlite` instead of relying on the model's self-identification. Codex exposes the current session ID as `CODEX_THREAD_ID`; query the matching `threads.id` row read-only:
+
+   ```bash
+   sqlite3 -readonly "$HOME/.codex/state_5.sqlite" \
+     -cmd ".parameter init" \
+     -cmd ".parameter set :thread_id $CODEX_THREAD_ID" \
+     'SELECT model, reasoning_effort FROM threads WHERE id = :thread_id;'
+   ```
+
+   Treat the returned `model` and `reasoning_effort` columns as authoritative for the current Codex session. If `CODEX_THREAD_ID` is unavailable, the database cannot be read, no matching row exists, or either value is null or empty, ask the user instead of inventing it.
+
+   When the harness is Claude Code, resolve both values from the current session transcript instead of relying on the model's self-identification. Claude Code exposes the current session ID as `CLAUDE_CODE_SESSION_ID` and stores the transcript as a JSONL file under `~/.claude/projects/`; read the `model` and `effort` fields recorded on the latest assistant message:
+
+   ```bash
+   transcript=$(find "$HOME/.claude/projects" -name "$CLAUDE_CODE_SESSION_ID.jsonl" 2>/dev/null | head -1)
+   grep '"type":"assistant"' "$transcript" | tail -1 | grep -o '"model":"[^"]*"\|"effort":"[^"]*"'
+   ```
+
+   Treat the returned `model` and `effort` values as authoritative for the current Claude Code session; the latest assistant message reflects any mid-session `/model` change, whereas `~/.claude/settings.json` only holds the startup default. The environment variable `CLAUDE_EFFORT`, when set, may be used to cross-check the effort value. For example, `model` `claude-fable-5` with `effort` `high` yields the author identity `claude-fable-5-high@claude-code <claude-code@agent.invalid>`. If `CLAUDE_CODE_SESSION_ID` is unavailable, no matching transcript file exists, or either value is missing, ask the user instead of inventing it.
+
+   For other harnesses, use the values made available by that environment; if either value is unavailable, ask the user.
 5. Record other models with conventional trailers according to their material role:
    - Code or artifact contributor: `Co-authored-by`
    - Reviewer: `Reviewed-by`
@@ -63,15 +85,15 @@ docs: explain remote executor setup
 Use standard co-author trailers for agents that directly produced committed content:
 
 ```text
-Co-authored-by: {model}-{reasoning_effort}@{harness} <{harness}@ai.invalid>
+Co-authored-by: {model}-{reasoning_effort}@{harness} <{harness}@agent.invalid>
 ```
 
-Use `{harness}@ai.invalid` for every agent author and trailer identity, where `{harness}` is the platform running the agent. In Codex, use `codex@ai.invalid`. Distinguish agents by the `{model}-{reasoning_effort}@{harness}` display name rather than by email. Use conventional role trailers for non-authoring work:
+Use `{harness}@agent.invalid` for every agent author and trailer identity, where `{harness}` is the platform running the agent. In Codex, use `codex@agent.invalid`; in Claude Code, use `claude-code@agent.invalid`. Distinguish agents by the `{model}-{reasoning_effort}@{harness}` display name rather than by email. Use conventional role trailers for non-authoring work:
 
 ```text
-Reviewed-by: o3-high@codex <codex@ai.invalid>
-Tested-by: gpt-5.6-terra-medium@codex <codex@ai.invalid>
-Reported-by: o4-mini-high@codex <codex@ai.invalid>
+Reviewed-by: o3-high@codex <codex@agent.invalid>
+Tested-by: gpt-5.6-terra-medium@codex <codex@agent.invalid>
+Reported-by: o4-mini-high@codex <codex@agent.invalid>
 ```
 
 Add trailers with repeated `--trailer` options when possible so Git formats them correctly.
@@ -84,10 +106,10 @@ Confirm the staged files contain only the intended change, then commit without o
 
 ```bash
 git commit \
-  --author="gpt-5.6-sol-high@codex <codex@ai.invalid>" \
-  --trailer="Co-authored-by: o3-high@codex <codex@ai.invalid>" \
-  --trailer="Reviewed-by: gpt-5.6-terra-medium@codex <codex@ai.invalid>" \
-  --trailer="Tested-by: gpt-5.6-terra-medium@codex <codex@ai.invalid>" \
+  --author="gpt-5.6-sol-high@codex <codex@agent.invalid>" \
+  --trailer="Co-authored-by: o3-high@codex <codex@agent.invalid>" \
+  --trailer="Reviewed-by: gpt-5.6-terra-medium@codex <codex@agent.invalid>" \
+  --trailer="Tested-by: gpt-5.6-terra-medium@codex <codex@agent.invalid>" \
   -m "tui: feat: describe the change"
 ```
 
@@ -99,7 +121,7 @@ For the latest commit, amend only the requested metadata:
 
 ```bash
 git commit --amend --no-edit \
-  --author="gpt-5.6-sol-high@codex <codex@ai.invalid>"
+  --author="gpt-5.6-sol-high@codex <codex@agent.invalid>"
 ```
 
 For multiple recent commits:
